@@ -6,6 +6,28 @@ const fs = require('node:fs/promises');
 const path = require('node:path');
 
 const app = express();
+
+
+
+ // Allow the dashboard to communicate with the backend
+app.use((req, res, next) => {
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader(
+    'Access-Control-Allow-Methods',
+    'GET, POST, PUT, DELETE, OPTIONS'
+  );
+  res.setHeader(
+    'Access-Control-Allow-Headers',
+    'Content-Type'
+  );
+
+  if (req.method === 'OPTIONS') {
+    return res.sendStatus(204);
+  }
+
+  next();
+});
+
 const PORT = Number(process.env.PORT) || 5000;
 const DATA_FILE = process.env.CODECRAFTHUB_DATA_FILE || path.join(__dirname, 'courses.json');
 const VALID_STATUSES = ['Not Started', 'In Progress', 'Completed'];
